@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Client script for the Deployment System.
+Simple client script for the Deployment system.
 
 This script:
 1. Registers with the server
 2. Periodically checks in to update status
 3. Polls for pending deployments
 4. Simulates software installation
+
 """
 
 import argparse
@@ -23,10 +24,12 @@ import requests
 
 # Configuration
 DEFAULT_SERVER_URL = "http://localhost:8000"
-DEFAULT_CHECK_INTERVAL = 30  # seconds
-API_TOKEN = "YOUR_API_TOKEN_HERE"  # Replace with actual token
+DEFAULT_CHECK_INTERVAL = 30  # Check-in frequency (in seconds)
+API_TOKEN = "YOUR_API_TOKEN_HERE"  # Replace with a valid token
 
 class DeploymentClient:
+    """Handles client registration, check-ins, and deployment processing."""
+    
     def __init__(self, server_url, check_interval):
         self.server_url = server_url
         self.check_interval = check_interval
@@ -40,7 +43,7 @@ class DeploymentClient:
         }
         
     def _get_ip_address(self):
-        """Get the local IP address."""
+        """Retrieve the local IP address."""
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.connect(("8.8.8.8", 80))
@@ -51,17 +54,16 @@ class DeploymentClient:
             return "127.0.0.1"
     
     def _get_os_type(self):
-        """Detect the OS type."""
+        """Determine the operating system type."""
         system = platform.system().lower()
         if system == "darwin":
             return "macos"
         elif system == "windows":
             return "windows"
-        else:
-            return "linux"  # Default to Linux for other systems
+        return "linux"  # Default to Linux
     
     def check_in(self):
-        """Check in with the server and get pending deployments."""
+        """Send a check-in request to the server and retrieve pending deployments."""
         url = f"{self.server_url}/api/client-checkin/"
         data = {
             "hostname": self.hostname,
@@ -79,6 +81,7 @@ class DeploymentClient:
                 print(f"Checked in successfully. Client ID: {self.client_id}")
                 print(f"Found {len(pending_deployments)} pending deployments")
                 
+                # Process each pending deployment
                 for deployment in pending_deployments:
                     self.process_deployment(deployment)
                 
@@ -91,7 +94,7 @@ class DeploymentClient:
             return False
     
     def process_deployment(self, deployment):
-        """Process a pending deployment."""
+        """Handle a pending deployment."""
         deployment_id = deployment.get("id")
         package_name = deployment.get("package_name")
         package_version = deployment.get("package_version")
@@ -105,7 +108,7 @@ class DeploymentClient:
         print(f"Installing {package_name} v{package_version}...")
         self._simulate_installation()
         
-        # Randomly succeed or fail (90% success rate)
+        # Determine success (90% success rate)
         if random.random() < 0.9:
             status = "completed"
             print(f"Installation of {package_name} v{package_version} completed successfully")
@@ -113,11 +116,11 @@ class DeploymentClient:
             status = "failed"
             print(f"Installation of {package_name} v{package_version} failed")
         
-        # Update deployment status
+        # Update the server with the final status
         self.update_deployment_status(deployment_id, status)
     
     def update_deployment_status(self, deployment_id, status):
-        """Update the status of a deployment."""
+        """Send an update request for deployment status."""
         url = f"{self.server_url}/api/update-deployment/{deployment_id}/"
         data = {"status": status}
         
@@ -134,7 +137,7 @@ class DeploymentClient:
             return False
     
     def _simulate_installation(self):
-        """Simulate the software installation process."""
+        """Simulate the steps of software installation."""
         steps = [
             "Downloading package...",
             "Verifying package integrity...",
@@ -147,14 +150,12 @@ class DeploymentClient:
         
         for step in steps:
             print(step)
-            # Random delay between 0.5 and 2 seconds
-            time.sleep(random.uniform(0.5, 2))
-            # Show progress
+            time.sleep(random.uniform(0.5, 2))  # Random delay per step
             progress = random.randint(1, 100)
             print(f"Progress: {progress}%")
     
     def run(self):
-        """Run the client in a loop."""
+        """Continuously check in and process deployments at intervals."""
         print(f"Starting deployment client for {self.hostname} ({self.ip_address})")
         print(f"Operating System: {self.os_type}")
         print(f"Server URL: {self.server_url}")
@@ -170,6 +171,7 @@ class DeploymentClient:
             time.sleep(self.check_interval)
 
 def main():
+    """Parse command-line arguments and start the client."""
     parser = argparse.ArgumentParser(description="Deployment System Client")
     parser.add_argument("--server", default=DEFAULT_SERVER_URL, help="Server URL")
     parser.add_argument("--interval", type=int, default=DEFAULT_CHECK_INTERVAL, help="Check interval in seconds")

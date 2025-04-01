@@ -99,20 +99,26 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
+# Password rules Django checks when users create passwords
 AUTH_PASSWORD_VALIDATORS = [
     {
+        # Stops passwords that are too similar to the user's info (like their name or email)
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
+        # Makes sure passwords are at least a certain length
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
+        # Blocks very common passwords (like "password123" or "qwerty")
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
+        # Doesn't allow passwords made up of only numbers (like "12345678")
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 
 # Internationalization

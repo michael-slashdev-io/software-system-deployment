@@ -1,17 +1,17 @@
 from rest_framework import serializers
 from .models import Client, Package, Deployment
 
-# Serializer to convert Client model data into JSON format.
+# Serializer to convert Client model data into JSON format
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client  # The model to serialize.
-        fields = ['id', 'hostname', 'ip_address', 'status', 'os_type', 'last_checkin']  # Fields to include in the serialized output.
+        fields = ['id', 'hostname', 'ip_address', 'status', 'os_type', 'last_checkin']  # Fields to include in the serialized output
 
-# Serializer to convert Package model data into JSON format.
+# Serializer to convert Package model data into JSON format
 class PackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Package  # The model to serialize.
-        fields = ['id', 'name', 'version', 'created_at']  # Fields to include in the serialized output.
+        fields = ['id', 'name', 'version', 'created_at']  # Fields to include in the serialized output
 
 # Serializer to convert Deployment model data into JSON format with additional details.
 class DeploymentSerializer(serializers.ModelSerializer):
