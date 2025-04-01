@@ -8,7 +8,7 @@ class Client(models.Model):
         ('offline', 'Offline'),
     ]
     
-    # Options for the operating system of the client.
+    # Options for the os of the client.
     OS_CHOICES = [
         ('windows', 'Windows'), 
         ('macos', 'macOS'), 
