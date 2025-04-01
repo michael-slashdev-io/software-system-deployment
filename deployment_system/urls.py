@@ -18,9 +18,10 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework.authtoken import views as token_views
 
+# URL routing for the project
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
+    path('admin/', admin.site.urls),  # Admin interface
+    path('api/', include('api.urls')),  # Include the URLs from the 'api' app
     path('api-auth/', include('rest_framework.urls')),  # For browsable API login
-    path('api-token-auth/', token_views.obtain_auth_token),  # Token generation endpoint
+    path('api-token-auth/', token_views.obtain_auth_token),  # Token authentication endpoint
 ]
