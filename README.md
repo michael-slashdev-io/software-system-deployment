@@ -137,3 +137,5 @@ Retrieve token via `POST /api/token/` with username & password.
 - **Database issues** – Ensure PostgreSQL is running.
 - **Redis errors** – Verify Redis is active.
 - **Client script issues** – Check server URL & network.
+
+Changing a file
